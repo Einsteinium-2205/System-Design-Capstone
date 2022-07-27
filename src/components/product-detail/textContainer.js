@@ -20,6 +20,7 @@ class TextContainer extends React.Component {
       favoriteStatus: false,
       favoriteIcon: <AiOutlineStar />,
       currentlySelectedSize: "Select Size",
+      currAvailableQuantity: null,
       currentlySelectedQuantity: "-",
     };
 
@@ -72,7 +73,6 @@ class TextContainer extends React.Component {
   }
 
   handleFavorite() {
-    console.log('selected style: ', this.props.selectedStyle);
     if (this.state.favoriteStatus === false) {
       this.setState({
         favoriteStatus: true,
@@ -94,23 +94,16 @@ class TextContainer extends React.Component {
     } else if (event.target.id === "Select Size") {
       this.setState({
         currentlySelectedQuantity: "-",
+        currAvailableQuantity: null,
+        currentlySelectedSize: event.target.id,
       });
     }
-
-    this.setState({
-      bagError: "",
-      currentlySelectedSize: event.target.id,
-    });
-
-    if (
-      this.props.selectedStyle.skus[event.target.id] <
-      this.state.currentlySelectedQuantity
-    ) {
-      this.setState({
-        currentlySelectedQuantity: this.props.selectedStyle.skus[
-          event.target.id
-        ],
-      });
+    if (event.target.id !== "Select Size") {
+        this.setState({
+          currAvailableQuantity: this.props.selectedStyle.skus[event.target.id].quantity,
+          bagError: "",
+          currentlySelectedSize: this.props.selectedStyle.skus[event.target.id].size,
+        })
     }
   }
 
@@ -205,11 +198,14 @@ class TextContainer extends React.Component {
                 ) : null
               ) : null}
               {this.props.selectedStyle != undefined
-                ? Object.keys(this.props.selectedStyle.skus).map((key) => (
-                    <a id={key} onClick={(event) => this.selectSize(event)}>
-                      {key}
-                    </a>
-                  ))
+                ? Object.keys(this.props.selectedStyle.skus).map((key) => {
+                    const size = this.props.selectedStyle.skus[key].size;
+                    return (
+                      <a id={key} onClick={(event) => this.selectSize(event)}>
+                        {size}
+                      </a>
+                    )
+                  })
                 : null}
             </div>
           </span>
@@ -232,11 +228,7 @@ class TextContainer extends React.Component {
               {this.props.selectedStyle != undefined &&
               this.state.currentlySelectedSize !== "Select Size"
                 ? [
-                    ...Array(
-                      this.props.selectedStyle.skus[
-                        this.state.currentlySelectedSize
-                      ]
-                    ),
+                    ...Array(this.state.currAvailableQuantity),
                   ].map((item, i) =>
                     i <= 14 ? (
                       <a
