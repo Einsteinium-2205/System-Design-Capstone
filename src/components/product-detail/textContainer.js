@@ -27,6 +27,7 @@ class TextContainer extends React.Component {
     this.handleFavorite = this.handleFavorite.bind(this);
   }
 
+
   componentDidUpdate(prevProps) {
     if (prevProps.product !== this.props.product) {
       apiMaster
@@ -71,7 +72,7 @@ class TextContainer extends React.Component {
   }
 
   handleFavorite() {
-    console.log('average rating from props: ', (this.props.averageRating))
+    console.log('selected style: ', this.props.selectedStyle);
     if (this.state.favoriteStatus === false) {
       this.setState({
         favoriteStatus: true,
@@ -138,7 +139,7 @@ class TextContainer extends React.Component {
         </div>
         {this.props.selectedStyle != undefined ? (
           <div id="product-price">
-            {this.props.selectedStyle.sale_price != 0 &&
+            {this.props.selectedStyle.sale_price != null &&
             this.props.selectedStyle.sale_price !==
               this.props.selectedStyle.original_price ? (
               <span>
