@@ -20,12 +20,14 @@ class TextContainer extends React.Component {
       favoriteStatus: false,
       favoriteIcon: <AiOutlineStar />,
       currentlySelectedSize: "Select Size",
+      currAvailableQuantity: null,
       currentlySelectedQuantity: "-",
     };
 
     this.handleAddToBag = this.handleAddToBag.bind(this);
     this.handleFavorite = this.handleFavorite.bind(this);
   }
+
 
   componentDidUpdate(prevProps) {
     if (prevProps.product !== this.props.product) {
@@ -92,23 +94,16 @@ class TextContainer extends React.Component {
     } else if (event.target.id === "Select Size") {
       this.setState({
         currentlySelectedQuantity: "-",
+        currAvailableQuantity: null,
+        currentlySelectedSize: event.target.id,
       });
     }
-
-    this.setState({
-      bagError: "",
-      currentlySelectedSize: event.target.id,
-    });
-
-    if (
-      this.props.selectedStyle.skus[event.target.id] <
-      this.state.currentlySelectedQuantity
-    ) {
-      this.setState({
-        currentlySelectedQuantity: this.props.selectedStyle.skus[
-          event.target.id
-        ],
-      });
+    if (event.target.id !== "Select Size") {
+        this.setState({
+          currAvailableQuantity: this.props.selectedStyle.skus[event.target.id].quantity,
+          bagError: "",
+          currentlySelectedSize: this.props.selectedStyle.skus[event.target.id].size,
+        })
     }
   }
 
@@ -125,7 +120,7 @@ class TextContainer extends React.Component {
         id="product-detail-text-container"
         className={this.props.textContainerVisibility}
       >
-        <Stars rating={this.props.averageRating} />
+        <Stars rating={Number((this.props.averageRating).toString().slice(0, 5))} />
         <a href="#reviews-ratings-container" id="reviews-link">
           Read all {this.state.reviewsLength} reviews
         </a>
@@ -137,7 +132,7 @@ class TextContainer extends React.Component {
         </div>
         {this.props.selectedStyle != undefined ? (
           <div id="product-price">
-            {this.props.selectedStyle.sale_price != 0 &&
+            {this.props.selectedStyle.sale_price != null &&
             this.props.selectedStyle.sale_price !==
               this.props.selectedStyle.original_price ? (
               <span>
@@ -203,11 +198,14 @@ class TextContainer extends React.Component {
                 ) : null
               ) : null}
               {this.props.selectedStyle != undefined
-                ? Object.keys(this.props.selectedStyle.skus).map((key) => (
-                    <a id={key} onClick={(event) => this.selectSize(event)}>
-                      {key}
-                    </a>
-                  ))
+                ? Object.keys(this.props.selectedStyle.skus).map((key) => {
+                    const size = this.props.selectedStyle.skus[key].size;
+                    return (
+                      <a id={key} onClick={(event) => this.selectSize(event)}>
+                        {size}
+                      </a>
+                    )
+                  })
                 : null}
             </div>
           </span>
@@ -230,11 +228,7 @@ class TextContainer extends React.Component {
               {this.props.selectedStyle != undefined &&
               this.state.currentlySelectedSize !== "Select Size"
                 ? [
-                    ...Array(
-                      this.props.selectedStyle.skus[
-                        this.state.currentlySelectedSize
-                      ]
-                    ),
+                    ...Array(this.state.currAvailableQuantity),
                   ].map((item, i) =>
                     i <= 14 ? (
                       <a
