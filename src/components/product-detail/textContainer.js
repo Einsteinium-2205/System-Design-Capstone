@@ -71,6 +71,7 @@ class TextContainer extends React.Component {
   }
 
   handleFavorite() {
+    console.log('average rating from props: ', (this.props.averageRating))
     if (this.state.favoriteStatus === false) {
       this.setState({
         favoriteStatus: true,
@@ -125,7 +126,7 @@ class TextContainer extends React.Component {
         id="product-detail-text-container"
         className={this.props.textContainerVisibility}
       >
-        <Stars rating={this.props.averageRating} />
+        <Stars rating={Number((this.props.averageRating).toString().slice(0, 5))} />
         <a href="#reviews-ratings-container" id="reviews-link">
           Read all {this.state.reviewsLength} reviews
         </a>
