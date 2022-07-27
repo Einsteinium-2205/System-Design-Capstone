@@ -13,8 +13,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
-console.log(process.env.API_KEY);
-
 app.use('/*', (req, res) => {
   if (req.baseUrl !== '/favicon.ico') {
     axios.request({
