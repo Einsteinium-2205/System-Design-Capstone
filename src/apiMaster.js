@@ -4,27 +4,27 @@ const getProductList = () => {
   axios.get('/products');
 };
 
-const getProductInfo = (id = 37311) => {
+const getProductInfo = (id = 1) => {
   return axios.get(`/products/${id}`);
 };
 
-const getProductStyles = (id = 37311) => {
+const getProductStyles = (id = 1) => {
   return axios.get(`/products/${id}/styles`);
 };
 
-const getRelatedProducts = (id = 37311) => {
+const getRelatedProducts = (id = 1) => {
   return axios.get(`/products/${id}/related`);
 };
 
-const getQA = (id = 37311) => {
+const getQA = (id = 1) => {
   return axios.get(`/qa/questions?product_id=${id}`);
 };
 
-const getReviewMetaData = (id = 37311) => {
+const getReviewMetaData = (id = 1) => {
   return axios.get(`/reviews/meta?product_id=${id}`);
 };
 
-const getReviewsOfProduct = (id = 37311, sortString = "relevant", count = 20) => {
+const getReviewsOfProduct = (id = 1, sortString = "relevant", count = 20) => {
   return axios.get(
     `/reviews/?product_id=${id}&sort=${sortString}:asc&count=${count}}`
   );

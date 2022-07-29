@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
-const port = 3000;
 const path = require('path');
 require('dotenv').config();
 
 const axios = require('axios');
-const API_URL = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfe';
+// const API_URL = 'https://app-hrsei-api.herokuapp.com/api/fec2/hr-rfe';
+const API_URL = 'http://localhost:3000';
 
 app.use(express.static('dist'));
 
@@ -29,6 +29,8 @@ app.use('/*', (req, res) => {
     });
   }
 });
+
+const port = process.env.PORT || 3000;
 
 app.listen(port, () =>
   console.log(`Example app listening at http://localhost:${port}`)
